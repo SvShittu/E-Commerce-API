@@ -11,14 +11,15 @@ const register = async(req, res) => {
         return res.status(400).json({message: "User already exists"})
     }
 
-    const hashedPassword = await bcryptjs.hash(password, 12)
+    //const hashedPassword = await bcryptjs.hash(password, 12)
 // first registered user is an admin
 const isFirstAccount = await User.countDocuments({}) === 0
 const role = isFirstAccount? "admin" : "user"
     const user = new User({
         name,
         email,
-        password: hashedPassword,
+        //password: hashedPassword,
+        password,
         role
     })
     await user.save()
@@ -26,7 +27,8 @@ const role = isFirstAccount? "admin" : "user"
         _id: user._id,
         name: user.name,
         email: user.email,
-        role: user.role
+        role: user.role,
+        password
     })
 } catch (error) {
     return res.status(500).json({message: error.message})
