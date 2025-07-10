@@ -2,7 +2,7 @@ const User = require("../models/userModel")
 const bcryptjs = require("bcryptjs")
 const register = async(req, res) => {
     try {
-    const{name, email, password, role } = req.body
+    const{name, email, password } = req.body
     if(!name || !email || !password){
         return res.status(400).json({message: "All fields are required"})
     }
@@ -12,18 +12,20 @@ const register = async(req, res) => {
     }
 
     const hashedPassword = await bcryptjs.hash(password, 12)
-
+// first registered user is an admin
+const isFirstAccount = await User.countDocuments({}) === 0
+const role = isFirstAccount? "admin" : "user"
     const user = new User({
         name,
         email,
         password: hashedPassword,
+        role
     })
     await user.save()
     return res.status(201).json({
         _id: user._id,
         name: user.name,
         email: user.email,
-        password: hashedPassword,
         role: user.role
     })
 } catch (error) {
