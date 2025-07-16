@@ -1,6 +1,7 @@
 const User = require("../models/userModel")
 const bcryptjs = require("bcryptjs")
 const jwt = require("jsonwebtoken")
+const{createJWT} = require("../utils/index")
 const register = async(req, res) => {
     try {
     const{name, email, password } = req.body
@@ -25,7 +26,8 @@ const role = isFirstAccount? "admin" : "user"
 
     })
     const tokenUser = {name:user.name, userId: user._id, role: user.role}
-    const token = jwt.sign(tokenUser, "jwtSecret", {expiresIn :"1d"})
+    const token = createJWT({payLoad: tokenUser})
+    // const token = jwt.sign(tokenUser, "jwtSecret", {expiresIn :"1d"})
     await user.save()
     return res.status(201).json({
     user: tokenUser, token
