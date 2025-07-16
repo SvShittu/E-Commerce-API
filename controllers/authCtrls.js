@@ -1,5 +1,6 @@
 const User = require("../models/userModel")
 const bcryptjs = require("bcryptjs")
+const jwt = require("jsonwebtoken")
 const register = async(req, res) => {
     try {
     const{name, email, password } = req.body
@@ -21,14 +22,13 @@ const role = isFirstAccount? "admin" : "user"
         //password: hashedPassword,
         password,
         role
+
     })
+    const tokenUser = {name:user.name, userId: user._id, role: user.role}
+    const token = jwt.sign(tokenUser, "jwtSecret", {expiresIn :"1d"})
     await user.save()
     return res.status(201).json({
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        password
+    user: tokenUser, token
     })
 } catch (error) {
     return res.status(500).json({message: error.message})
