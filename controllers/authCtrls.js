@@ -25,17 +25,23 @@ const role = isFirstAccount? "admin" : "user"
         role
 
     })
-    const tokenUser = {name:user.name, userId: user._id, role: user.role}
-    const token = createJWT({payLoad: tokenUser})
-    // const token = jwt.sign(tokenUser, "jwtSecret", {expiresIn :"1d"})
     await user.save()
-    // return res.status(201).json({
-    // user: tokenUser, token
-
+    const tokenUser = {name:user.name, userId: user._id, role: user.role}
+    const token = createJWT({payload: tokenUser})
+   // const token = jwt.sign(tokenUser, "jwtSecret", {expiresIn :"1d"})
+  const oneDay = 1000 * 60 * 60 * 24
     res.cookie("token", token, {
         httpOnly:true,
-    })
-    //})
+        expires: new Date(Date.now() + oneDay )
+
+   })
+
+//Sending response after setting the cookie
+  return res.status(201).json({
+    user: tokenUser,
+     token
+     })
+
 } catch (error) {
     return res.status(500).json({message: error.message})
 
