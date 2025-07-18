@@ -1,7 +1,7 @@
 const User = require("../models/userModel")
 const bcryptjs = require("bcryptjs")
 const jwt = require("jsonwebtoken")
-const{createJWT} = require("../utils/index")
+const{attachCookiesToResponse} = require("../utils/index")
 const register = async(req, res) => {
     try {
     const{name, email, password } = req.body
@@ -27,20 +27,15 @@ const role = isFirstAccount? "admin" : "user"
     })
     await user.save()
     const tokenUser = {name:user.name, userId: user._id, role: user.role}
-    const token = createJWT({payload: tokenUser})
+   attachCookiesToResponse({res, user: tokenUser})
+    // const token = createJWT({payload: tokenUser})
    // const token = jwt.sign(tokenUser, "jwtSecret", {expiresIn :"1d"})
-  const oneDay = 1000 * 60 * 60 * 24
-    res.cookie("token", token, {
-        httpOnly:true,
-        expires: new Date(Date.now() + oneDay )
-
-   })
-
+  
 //Sending response after setting the cookie
-  return res.status(201).json({
-    user: tokenUser,
-     token
-     })
+//   return res.status(201).json({
+//     user: tokenUser,
+//      token
+//      })
 
 } catch (error) {
     return res.status(500).json({message: error.message})
