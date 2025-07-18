@@ -29,11 +29,17 @@ const role = isFirstAccount? "admin" : "user"
     const token = createJWT({payLoad: tokenUser})
     // const token = jwt.sign(tokenUser, "jwtSecret", {expiresIn :"1d"})
     await user.save()
-    return res.status(201).json({
-    user: tokenUser, token
+    // return res.status(201).json({
+    // user: tokenUser, token
+
+    res.cookie("token", token, {
+        httpOnly:true,
     })
+    //})
 } catch (error) {
     return res.status(500).json({message: error.message})
+
+    
 }}
 const login = async(req, res)=>{
     res.send("login user")
