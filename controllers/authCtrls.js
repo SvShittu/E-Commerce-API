@@ -43,8 +43,24 @@ const role = isFirstAccount? "admin" : "user"
     
 }}
 const login = async(req, res)=>{
-    res.send("login user")
-}
+    const{email, password} = req.body
+    if(!email || !password){
+        res.status(400).json({message: "Please provide email and password"})
+        }
+     const user = await User.findOne({email})
+     if(!user){
+        res.status(401).json({message:"User doesn't exists"})
+     
+    }
+    const isPasswordCorrect = await user.comparePassword(password)
+    if(!isPasswordCorrect){
+        res.status(401).json({message: "Invalid Credentials"})
+    }
+    const tokenUser = {name: user.name, userId: user._id, role: user.role}
+    attachCookiesToResponse({res, user: tokenUser})
+    res.status(201).json({user: tokenUser})
+
+   }
 
 const logout = async(req, res) =>{
     res.send("logout user")
