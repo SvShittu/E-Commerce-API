@@ -29,6 +29,7 @@ const role = isFirstAccount? "admin" : "user"
     const tokenUser = {name:user.name, userId: user._id, role: user.role}
    attachCookiesToResponse({res, user: tokenUser})
     // const token = createJWT({payload: tokenUser})
+
    // const token = jwt.sign(tokenUser, "jwtSecret", {expiresIn :"1d"})
   
 //Sending response after setting the cookie
@@ -49,7 +50,7 @@ const login = async(req, res)=>{
         }
      const user = await User.findOne({email})
      if(!user){
-        res.status(401).json({message:"User doesn't exists"})
+        res.status(401).json({message:"User do not exists"})
      
     }
     const isPasswordCorrect = await user.comparePassword(password)
