@@ -20,8 +20,7 @@ const updateUserPassword = async(req, res) => {
 }
 
 
-module.exports =
- {
+module.exports = {
 getAllUsers,
 getSingleUser,
 showCurrentUser,
