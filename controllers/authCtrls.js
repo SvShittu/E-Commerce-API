@@ -50,7 +50,7 @@ const login = async(req, res)=>{
         }
      const user = await User.findOne({email})
      if(!user){
-        res.status(401).json({message:"User do not exists"})
+        res.status(401).json({message:"User do not exist"})
      
     }
     const isPasswordCorrect = await user.comparePassword(password)
@@ -64,7 +64,11 @@ const login = async(req, res)=>{
    }
 
 const logout = async(req, res) =>{
-    res.send("logout user")
+    res.cookie("token", "logout",{
+        httpOnly: true,
+        expires: new Date(Date.now() + 5 * 1000),
+    })
+    res.status(200).json({message: "User logged out"})
 }
 
 module.exports = {
