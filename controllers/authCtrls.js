@@ -43,6 +43,7 @@ const role = isFirstAccount? "admin" : "user"
 
     
 }}
+//login
 const login = async(req, res)=>{
     const{email, password} = req.body
     if(!email || !password){
@@ -62,7 +63,7 @@ const login = async(req, res)=>{
     res.status(201).json({user: tokenUser})
 
    }
-
+//logout
 const logout = async(req, res) =>{
     res.cookie("token", "logout",{
         httpOnly: true,
