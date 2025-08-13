@@ -15,6 +15,7 @@ const getSingleUser = async(req, res) => {
 if(!user){
      res.status(404).json({message: `No user with id: ${req.params.id}`})
 }
+res.status(200).json({user})
 }
 
 
